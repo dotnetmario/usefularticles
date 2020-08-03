@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+
+Route::get('/test', array('as' => 'test', 'uses' => 'HomeController2@test'));
+Auth::routes();
+
+
+Route::get('/', array('as' => 'index', 'uses' => 'HomeController@index'));
+Route::post('/', array('as' => 'search', 'uses' => 'SearchController@search'));
