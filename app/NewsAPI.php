@@ -420,11 +420,11 @@ class NewsAPI extends Model
                     $sn_authors[] = $a['source']['name'];
 
                 foreach($sn_authors as $ath){
-                    $aut = new Author;
+                    $aut = new Author($ath);
                     
                     // author doesn't exist
                     if(!$aut->exists($ath)){
-                        $aut = $aut->add($ath);
+                        $aut = $aut->add();
                         // push the authors id into an array of int
                         array_push($authors, $aut->id);
                     }else{ // author exists
@@ -434,7 +434,21 @@ class NewsAPI extends Model
                     }
                 }
             }
+
+            $art = new Article($pub->id, 
+                                $a['title'], 
+                                $a['description'], 
+                                $a['url'], 
+                                $a['urlToImage'], 
+                                date('Y-m-d H:i:s', strtotime($a['publishedAt'])));
+
+            // article
+            if(isset($a['url']) && !$art->exists($a['url'])){
+                $art->add($authors);
+            }
         }
+
+        return true;
     }
 }
 

@@ -164,17 +164,14 @@ class Article extends Model
     /**
      * add an article
      * 
-     * @param int publisher_id
      * @param int|array author_id
-     * @param string title
-     * @param string description
-     * @param string url
-     * @param string image
-     * @param string publish_date
      * 
      * @return int article id
      */
-    public function add(){
+    public function add($auth_id){
+        if(!isset($auth_id))
+            return null;
+    
         $art = new Article;
         $art->publisher_id = $this->_pub_id;
         $art->permalink = $this->generatePermalink();

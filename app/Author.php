@@ -9,6 +9,8 @@ class Author extends Model
 {
     use SoftDeletes;
 
+    public $_name;
+
     /**
      * The table associated with the model.
      *
@@ -24,6 +26,15 @@ class Author extends Model
     protected $fillable = [
         'name',
     ];
+
+    /**
+     * construct
+     * 
+     * 
+     */
+    public function __construct($name){
+        $this->_name = $name;
+    }
 
 
     /**
@@ -87,10 +98,13 @@ class Author extends Model
      * 
      * @return Author
      */
-    public function add($name){
-        return Author::create([
-            'name' => $name
-        ]);
+    public function add(){
+        $auth = new Author;
+
+        $auth->name = $this->_name;
+        $auth->save();
+
+        return $auth;
     }
 
 

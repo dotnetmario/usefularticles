@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SearchRequest;
 
 use App\Search;
+use App\NewsAPI;
 
 class SearchController extends Controller
 {
@@ -17,7 +18,12 @@ class SearchController extends Controller
     public function search(SearchRequest $request){
         // dd($request);
         $srch = new Search($request);
+        // raw data coming from the API
         $res = $srch->getSearchResults();
+
+        // sort through data and save the new results
+        $api = new NewsAPI;
+        $sort = $api->sortResponseData($res);
 
         dd($res);
     }
