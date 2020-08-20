@@ -19,8 +19,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/test', array('as' => 'test', 'uses' => 'HomeController2@test'));
+Route::get('/populate', array('as' => 'test', 'uses' => 'HomeController2@populate2'));
 Auth::routes();
 
 
 Route::get('/', array('as' => 'index', 'uses' => 'HomeController@index'));
-Route::post('/', array('as' => 'search', 'uses' => 'SearchController@search'));
+Route::post('/search', array('as' => 'search', 'uses' => 'SearchController@search'));
+// article param need to ne a permalink not just an id
+Route::get('/article/{article}', array('as' => 'article', 'uses' => 'ArticlesController@article'));

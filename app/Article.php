@@ -16,6 +16,7 @@ class Article extends Model
     public $_title;
     public $_desc;
     public $_url;
+    public $_image_url;
     public $_image;
     public $_p_date;
 
@@ -32,7 +33,7 @@ class Article extends Model
      * @var array
     */
     protected $fillable = [
-        'publisher_id', 'permalink', 'title', 'description', 'article_url', 'image_url', 'publish_date',
+        'publisher_id', 'permalink', 'title', 'description', 'article_url', 'image_url', 'image', 'publish_date',
     ];
 
     /**
@@ -40,11 +41,12 @@ class Article extends Model
      * 
      * 
      */
-    public function __construct($pub_id = null, $title = null, $desc = null, $url = null, $image = null, $p_date = null){
+    public function __construct($pub_id = null, $title = null, $desc = null, $url = null, $image_url = null, $image = null, $p_date = null){
         $this->_pub_id = $pub_id;
         $this->_title = $title;
         $this->_desc = $desc;
         $this->_url = $url;
+        $this->_image_url = $image_url;
         $this->_image = $image;
         $this->_p_date = $p_date;
     }
@@ -178,7 +180,8 @@ class Article extends Model
         $art->title = $this->_title;
         $art->description = $this->_desc;
         $art->article_url = $this->_url;
-        $art->image_url = $this->_image;
+        $art->image_url = $this->_image_url;
+        $art->image = $this->_image;
         $art->publish_date = $this->_p_date;
         
         if($art->save()){
@@ -196,6 +199,32 @@ class Article extends Model
      * 
      * 
      */
+
+    /**
+     * get one article
+     * 
+     * @param string url
+     * @param string permalink
+     * @return Article
+     */
+    public function getArticle($perma = null, $url = null){
+        $permalink = $this->_permalink ?? $perma;
+        $arturl = $this->_url ?? $url;
+
+        if(!isset($permalink) && !isset($arturl))
+            return null;
+
+        $article = new Article;
+
+        if(isset($permalink))
+            $article = $article->where('permalink', $permalink);
+
+        if(isset($arturl))
+            $article = $article->where('article_url', $arturl);
+
+        return $article->first();
+    }
+
 
     /**
      * get the articles

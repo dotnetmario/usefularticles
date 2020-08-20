@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 use App\Publisher;
 use App\Author;
+use App\LStorage;
 
 class NewsAPI extends Model
 {
@@ -391,66 +392,90 @@ class NewsAPI extends Model
      * @return boolean
      */
     public function sortResponseData($res){
+        // for local developement
+        // ini_set("max_execution_time", 0);
+        // ini_set("memory_limit", -1);
+
         // get response data as JSON
         $arts = $res->json();
 
         foreach($arts['articles'] as $a){
-            // author/authors of the article
-            $authors = array();
+            // check if the article is already inserted
+            // if it is we skip it
+            if((new Article)->exists($a['url']))
+                continue;
 
             // publisher
-            if(isset($a['source']['id'])){
+            if(isset($a['source']['name'])){
+                $name = $a['source']['name'] ?? null;
+                $id = $a['source']['id'] ?? null;
+
                 // if publisher exists
-                $pub = new Publisher($a['source']['id'], $a['source']['name']);
+                $pub = new Publisher($id, $name);
                 // insert the non existing publisher
                 if(!$pub->exists()){
                     $pub = $pub->add();
                 }else{ // publisher exists and we return it
-                    $pub = $pub->getPublisher($a['source']['id']);
+                    $pub = $pub->getPublisher();
+                }
+            }else{
+                // if the publisher name is not present we skip the article
+                continue;
+            }
+
+
+            // author/authors of the article
+            $authors = array();
+            // sanitise author/authors 
+            $sn_authors = $this->sanitizeAuthor($a['author']);
+            // if author value is null or empty 
+            // take the publisher name as an author
+            if(!$sn_authors)
+                $sn_authors[] = $a['source']['name'];
+
+            foreach($sn_authors as $ath){
+                $aut = new Author($ath);
+                
+                // author doesn't exist
+                if(!$aut->exists()){
+                    $aut = $aut->add();
+                    // push the authors id into an array of int
+                    array_push($authors, $aut->id);
+                }else{ // author exists
+                    $aut = $aut->getAuthor(null, $ath);
+                    // push the authors id into an array of int
+                    array_push($authors, $aut->id);
                 }
             }
 
-            // authors
-            if(isset($a['author'])){
-                // sanitise author/authors 
-                $sn_authors = $this->sanitizeAuthor($a['author']);
-                // if author value is null or empty 
-                // take the publisher name as an author
-                if(!$sn_authors)
-                    $sn_authors[] = $a['source']['name'];
-
-                foreach($sn_authors as $ath){
-                    $aut = new Author($ath);
-                    
-                    // author doesn't exist
-                    if(!$aut->exists($ath)){
-                        $aut = $aut->add();
-                        // push the authors id into an array of int
-                        array_push($authors, $aut->id);
-                    }else{ // author exists
-                        $aut = $aut->getAuthor(null, $ath);
-                        // push the authors id into an array of int
-                        array_push($authors, $aut->id);
-                    }
-                }
-            }
-
+            // save the article before saving and croping the image
+            // cause the article id is required to store the photo
             $art = new Article($pub->id, 
                                 $a['title'], 
                                 $a['description'], 
                                 $a['url'], 
                                 $a['urlToImage'], 
+                                null,
                                 date('Y-m-d H:i:s', strtotime($a['publishedAt'])));
 
             // article
             if(isset($a['url']) && !$art->exists($a['url'])){
                 $art->add($authors);
             }
+
+            $art = (new Article)->getArticle(null, $a['url']);
+
+            // save image local with multile aspect ratios
+            if(isset($a['urlToImage']) && !isset($art->image)){
+                $storage = new LStorage;
+                $image = $storage->savePhoto($art->publisher_id, $art->id, $a['urlToImage']);
+
+                $art = (new Article)->find($art->id);
+                $art->image = $image;
+                $art->save();
+            }
         }
 
         return true;
     }
 }
-
-
-

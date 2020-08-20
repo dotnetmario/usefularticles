@@ -7,6 +7,10 @@ use App\NewsAPI;
 use App\Publisher;
 use App\Author;
 use App\Article;
+use App\LStorage;
+use App\User;
+
+use Storage;
 
 class HomeController2 extends Controller
 {
@@ -42,11 +46,39 @@ class HomeController2 extends Controller
         //     }
             
         // }
+        $storage = new LStorage;
+
+        // $path = public_path("storage/images/78/80/original/c79a9985f0d38af3effe1340db79031.jpg");
+        // // $path = storage_path("storage/images/78/80/original/c79a9985f0d38af3effe1340db79031.jpg");
+        // $path = "images/78/80/original/1d1520bf442c9f5dff7c41b85f9fb46.jpg";
+        // $img = $storage->cropPhoto();
+        // dd($img);
+
+        // dd($path, Storage::disk('public')->url($path));
+
+        $arts = Article::find(80);
+        $pub = $arts->publisher()->first();
+        
+        // savePhoto($image = null)
+        // image_url
+        $res = $storage->savePhoto($pub->id, $arts->id, $arts->image_url);
+
+        // dd($arts, $pub);
+        dd($res);
         
 
         dd("done");
     }
 
+    public function populate2(Request $request){
+        $api = new NewsAPI;
+
+        $res = $api->getTopHeadlines('', 20, 1, 'us',);
+
+        $res = $api->sortResponseData($res);
+
+        dd($res);
+    }
 
     public function populate(Request $request){
         $api = new NewsAPI;

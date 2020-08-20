@@ -12,6 +12,7 @@
 <div class="col-12 mx-0 my-2 row">
     @foreach ($articles as $art)
         <div class="card col-sm-6 col-md-5 my-3 mx-auto px-0">
+            <a href="{{ route('article', ['article' => $art->id]) }}" class="text-dark"></a>
             <div class="w-100 px-1 py-2">
                 <img src="{{ $art->image_url }}" alt="" class="img-fluid">
             </div>

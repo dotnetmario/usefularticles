@@ -16,7 +16,7 @@ class SearchController extends Controller
      * search
      */
     public function search(SearchRequest $request){
-        // dd($request);
+        // pass the request and get serch reesults from the API
         $srch = new Search($request);
         // raw data coming from the API
         $res = $srch->getSearchResults();

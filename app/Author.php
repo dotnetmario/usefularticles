@@ -32,7 +32,7 @@ class Author extends Model
      * 
      * 
      */
-    public function __construct($name){
+    public function __construct($name = null){
         $this->_name = $name;
     }
 
@@ -67,8 +67,17 @@ class Author extends Model
      * 
      * @return bool
      */
-    public function exists($name){
-        return Author::where('name', $name)->count() > 0;
+    public function exists($name = null){
+        $auth = new Author;
+
+        $name = $name ?? $this->_name;
+
+        if(isset($name))
+            $auth = $auth->where('name', $name);
+        else
+            return null;
+
+        return $auth->count() > 0;
     }
 
     /**

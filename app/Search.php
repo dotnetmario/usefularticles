@@ -14,7 +14,7 @@ class Search extends Model
      * 
      * @param Request req
      */
-    public function __construct($req){
+    public function __construct($req = null){
         $this->_req = $req;
     }
 
@@ -24,9 +24,18 @@ class Search extends Model
      * 
      * 
      */
-    public function getSearchResults(){
+    public function getSearchResults($req = null){
         $api = new NewsAPI;
-        $r = $this->_req;
+        $r = null;
+
+        // test on the request param if present 
+        // with priority to the function's param
+        if(isset($req))
+            $r = $req;
+        else if(isset($this->_req))
+            $r = $this->_req;
+        else
+            return null;
 
         $query = isset($r->squery) && $r->squery ? $r->squery : null;
         $artsPerPage = isset($r->artsPerPage) && $r->artsPerPage ? $r->artsPerPage : 20;

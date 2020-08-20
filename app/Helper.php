@@ -1,11 +1,11 @@
 <?php
 
 class Helper {
-    // protected $obj;
+    protected $obj;
 
-    // public function __construct($obj){
-    //     $this->obj = $obj;
-    // }
+    public function __construct($obj = null){
+        $this->obj = $obj;
+    }
 
     /**
      * check if a date is valid against a format

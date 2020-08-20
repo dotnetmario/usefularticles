@@ -103,10 +103,16 @@ class Publisher extends Model
     /**
      * get a publisher
      * 
+     * @param int id
      * @return Pubisher
      */
-    public function getPublisher(){
+    public function getPublisher($id = null){
         $pub = new Publisher;
+
+        if(isset($id) && $id){
+            $pub = $pub->find($id);
+            return $pub;
+        }
 
         if(isset($this->_api_id) && $this->_api_id){
             $col = 'api_id';
@@ -151,15 +157,19 @@ class Publisher extends Model
      * @return Publisher
      */
     public function add(){
-        return Publisher::create([
-            'name' => $this->_name,
-            'api_id' => $this->_api_id,
-            'website' => $this->_website,
-            'description' => $this->_description,
-            'category' => $this->_category,
-            'lang' => $this->_lang,
-            'country' => $this->_country
-        ]);
+        $pub = new Publisher;
+
+        $pub->name = $this->_name;
+        $pub->api_id = $this->_api_id;
+        $pub->website = $this->_website;
+        $pub->description = $this->_description;
+        $pub->category = $this->_category;
+        $pub->lang = $this->_lang;
+        $pub->country = $this->_country;
+
+        $pub->save();
+
+        return $pub;
     }
 
     /**
