@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/helpers.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -79,6 +80,12 @@
         </nav>
 
         <main class="p-4">
+            <div id="top_alert" class="alert alert-dismissible fade show d-none" role="alert">
+                <h3 class="message"></h3>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             @yield('content')
         </main>
     </div>

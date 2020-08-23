@@ -4,6 +4,8 @@ namespace App\Http\Requests\Articles;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Article;
+
 class ArticleRequest extends FormRequest
 {
     /**
@@ -15,6 +17,10 @@ class ArticleRequest extends FormRequest
     {
         // validation 
         // article has to exist
+        $art = new Article;
+
+        if($art->exists($this->article, "permalink"))
+            return true;
 
         return false;
     }
@@ -27,7 +33,7 @@ class ArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            'article' => 'required'
+            
         ];
     }
 }

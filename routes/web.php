@@ -25,5 +25,5 @@ Auth::routes();
 
 Route::get('/', array('as' => 'index', 'uses' => 'HomeController@index'));
 Route::post('/search', array('as' => 'search', 'uses' => 'SearchController@search'));
-// article param need to ne a permalink not just an id
+// article param is a permalink 
 Route::get('/article/{article}', array('as' => 'article', 'uses' => 'ArticlesController@article'));
