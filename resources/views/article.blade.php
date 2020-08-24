@@ -35,8 +35,8 @@
         <div>
             @foreach($comments as $com)
                 <div class="card">
-                    <h5>{{ $com->user }}</h5>
-                    <h6 class="text-muted">{{ "@".$com->username }}</h6>
+                    <h5>{{ $com->user->firstname }}</h5>
+                    <h6 class="text-muted">{{ "@".$com->user->username }}</h6>
                     <p>{{ $com->body }}</p>
                 </div>
             @endforeach

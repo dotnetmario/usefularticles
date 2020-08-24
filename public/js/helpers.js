@@ -21,4 +21,15 @@ $(document).ready(function() {
             // alert.alert('close');
         }, (fadIn * 1000));
     }
+
+    // get url params
+    window.url_params = (del, pos) => {
+        let url = window.location.href;
+        let split_url = url.split(del);
+
+        if(pos < 0)
+            return split_url[split_url.length - 1];
+        else
+            return split_url[pos];
+    }
 });

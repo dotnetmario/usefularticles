@@ -2,18 +2,33 @@ $(document).ready(function(){
 
     // comment on an article
     $("#comment_send").click(() => {
+        let csrf = $('meta[name="csrf-token"]').attr('content');
         let comment = $("#comment_field").val().trim();
+        let article = window.url_params('/', -1);
 
-
+        // comment is empty
         if(comment === ""){
             console.log("empty");
             window.alert_user("comment is empty", 'warning', 'top', 3);
-        }else{
-            console.log("not empty");
-            window.alert_user("comment is not empty", 'success', 'top', 3);
+            return;
         }
             
-
-        // console.log(comment);
+        // send the comment
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': csrf
+            },
+            url : '/comment',
+            type : 'POST',
+            data : {
+                article, comment
+            },
+            success : (data) => {
+                if(data.success)
+                    window.alert_user("comment was send success", 'success', 'top', 4);
+                else
+                    window.alert_user("comment was not send success", 'warning', 'top', 4);
+            }
+        });
     });
 });

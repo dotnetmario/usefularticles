@@ -27,3 +27,4 @@ Route::get('/', array('as' => 'index', 'uses' => 'HomeController@index'));
 Route::post('/search', array('as' => 'search', 'uses' => 'SearchController@search'));
 // article param is a permalink 
 Route::get('/article/{article}', array('as' => 'article', 'uses' => 'ArticlesController@article'));
+Route::post('/comment', array('as' => 'comment', 'uses' => 'CommentsController@comment'));
