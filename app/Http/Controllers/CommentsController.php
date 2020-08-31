@@ -34,7 +34,8 @@ class CommentsController extends Controller
             return response()->json(
                 [
                     "success" => true,
-                    "comment" => $comment
+                    "comment" => $comment,
+                    "user" => $comment->user
                 ],
                 200, 
                 ['Content-Type' => 'application/json;charset=utf8'], 

@@ -32,7 +32,7 @@
             </div>
             
         </form>
-        <div>
+        <div id="comments">
             @foreach($comments as $com)
                 <div class="card">
                     <h5>{{ $com->user->firstname }}</h5>

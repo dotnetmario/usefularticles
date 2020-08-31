@@ -1,4 +1,17 @@
 $(document).ready(function(){
+    // parse comment
+    let parseComment = (comment, user) => {
+        let html = ``;
+        let comments = $('#comments');
+
+        html = `<div class="card">
+                    <h5>${ user.firstname }</h5>
+                    <h6 class="text-muted">@${ user.username }</h6>
+                    <p>${ comment.body }</p>
+                </div>`;
+
+        comments.prepend(html);
+    }
 
     // comment on an article
     $("#comment_send").click(() => {
@@ -12,7 +25,7 @@ $(document).ready(function(){
             window.alert_user("comment is empty", 'warning', 'top', 3);
             return;
         }
-            
+
         // send the comment
         $.ajax({
             headers: {
@@ -23,11 +36,16 @@ $(document).ready(function(){
             data : {
                 article, comment
             },
+            error : () => {
+                window.alert_user("comment was not send success", 'warning', 'top', 4);
+            },
             success : (data) => {
-                if(data.success)
+                if(data.success){
                     window.alert_user("comment was send success", 'success', 'top', 4);
-                else
+                    parseComment(data.comment, data.user);
+                }else{
                     window.alert_user("comment was not send success", 'warning', 'top', 4);
+                }
             }
         });
     });
