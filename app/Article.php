@@ -246,7 +246,7 @@ class Article extends Model
 
         switch ($type) {
             case 'recent':
-                $res = $res->orderBy('publish_date', 'DESC');
+                $res = $res->orderBy('created_at', 'DESC');
                 break;
             
             default:
@@ -255,9 +255,11 @@ class Article extends Model
 
         // for dates
         if(isset($from)){
+            // if the date end is null, we set it to the current date
             if(!isset($to))
                 $to = date('Y-m-d');
 
+            // validate date format
             $ans = Helper::validateDate($from, 'Y-m-d') && Helper::validateDate($to, 'Y-m-d');
 
             if($ans){
@@ -267,5 +269,37 @@ class Article extends Model
         }
 
         return $res->paginate($artsPerPage);
+    }
+
+
+    /**
+     * get articles by search query
+     * 
+     * @param string search
+     * @param string inTitle
+     * @param int artsPerPage
+     */
+    public function getArticlesBySearchQuery($search = null, $inTitle = null, $artsPerPage = 20){
+        // still needs work, search request has a lot of params
+        // and we need use em for more customization
+
+        if(!isset($search) && !isset($inTitle))
+            return $this->getArticles();
+
+        $arts = new Article;
+
+        // search for query in title and description
+        if(isset($search)){
+            $arts = $arts->where('title', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%');
+        }
+
+        // search for query in title
+        if(isset($inTitle)){
+            $arts = $arts->where('title', 'like', '%'.$inTitle.'%');
+        }
+
+
+        return $arts->paginate($artsPerPage);
     }
 }

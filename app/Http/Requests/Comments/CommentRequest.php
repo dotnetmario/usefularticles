@@ -24,7 +24,7 @@ class CommentRequest extends FormRequest
 
         $type = gettype($article) === "string" ? "permalink" : "id";
 
-        if($art->exists($article, $type))
+        if($art->exists(urldecode($article), $type))
             return true;
 
         return false;

@@ -28,3 +28,4 @@ Route::post('/search', array('as' => 'search', 'uses' => 'SearchController@searc
 // article param is a permalink 
 Route::get('/article/{article}', array('as' => 'article', 'uses' => 'ArticlesController@article'));
 Route::post('/comment', array('as' => 'comment', 'uses' => 'CommentsController@comment'));
+Route::post('/reply', array('as' => 'reply', 'uses' => 'RepliesController@reply'));

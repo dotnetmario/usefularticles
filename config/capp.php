@@ -7,5 +7,6 @@ return [
             "medium" => 500,
             "large" => 800
         ]
-    ]
+    ],
+    'default-lang' => 'en'
 ];

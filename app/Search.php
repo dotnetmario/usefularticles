@@ -24,17 +24,15 @@ class Search extends Model
      * 
      * 
      */
-    public function getSearchResults($req = null){
+    public function getAPISearchResults($req = null){
         $api = new NewsAPI;
         $r = null;
 
         // test on the request param if present 
         // with priority to the function's param
-        if(isset($req))
-            $r = $req;
-        else if(isset($this->_req))
-            $r = $this->_req;
-        else
+        $r = $req ?? $this->_req;
+        
+        if(!isset($r))
             return null;
 
         $query = isset($r->squery) && $r->squery ? $r->squery : null;
@@ -46,7 +44,8 @@ class Search extends Model
         $exDomain = isset($r->exDomain) && $r->exDomain ? $r->exDomain : null;
         $from = isset($r->from) && $r->from ? $r->from : null;
         $to = isset($r->to) && $r->to ? $r->to : null;
-        $lang = isset($r->lang) && $r->lang ? $r->lang : null;
+        // instead of a global default lang this should be coming from a localisation value
+        $lang = isset($r->lang) && $r->lang ? $r->lang : config('capp.default-lang');
         $sortBy = isset($r->sortBy) && $r->sortBy ? $r->sortBy : null;
         
         $res = $api->getEverything(

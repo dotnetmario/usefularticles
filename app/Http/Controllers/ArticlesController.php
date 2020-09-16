@@ -18,7 +18,7 @@ class ArticlesController extends Controller
 
         $article = $article->getArticle($permalink);
 
-        $comments = $article->comments()->get();
+        $comments = $article->comments()->orderBy('created_at', 'DESC')->get();
         
         return view('article', compact('article', 'comments'));
     }

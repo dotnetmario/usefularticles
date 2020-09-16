@@ -72,6 +72,17 @@ class Comment extends Model
         return $this->hasMany('App\Reply');
     }
 
+    /**
+     * utilities
+     * 
+     */
+    public function exists($id){
+        if(!isset($id))
+            return false;
+
+        return Comment::where('id', $id)->count() > 0;
+    }
+
 
     /**
      * 

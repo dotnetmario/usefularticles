@@ -2,40 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\Comments\CommentRequest;
+use App\Http\Requests\Replies\ReplyRequest;
 
-use App\Comment;
+use App\Reply;
 use Auth;
 
-class CommentsController extends Controller
+class RepliesController extends Controller
 {
     /**
-     * construct
-     */
-    public function __construct(){
-        $this->middleware("auth");
-    }
-
-
-    /**
-     * comment on an article
+     * contruct
      * 
      */
-    public function comment(CommentRequest $request){
-        $user = Auth::id();
-        $article = $request->article;
-        $body = $request->comment;
+    public function __construct(){
+        $this->middleware('auth');
+    }
 
-        $comment = (new Comment)->commentOnArticle($user, urldecode($article), $body);
+    /**
+     * reply to a comment
+     * 
+     */
+    public function reply(ReplyRequest $request){
+        $comment = $request->comment;
+        $reply = $request->reply;
 
-        // return a reponse JSON
-        if(isset($comment)){
+        $reply = new Reply($comment, Auth::id(), $reply);
+        $reply = $reply->replyToComment();
+
+        // return a JSON reponse
+        if(isset($reply)){
             return response()->json(
                 [
                     "success" => true,
-                    "comment" => $comment,
-                    "user" => $comment->user
+                    "reply" => $reply,
+                    "user" => $reply->user
                 ],
                 200, 
                 ['Content-Type' => 'application/json;charset=utf8'], 
@@ -45,7 +44,7 @@ class CommentsController extends Controller
             return response()->json(
                 [
                     "success" => false,
-                    "comment" => null
+                    "reply" => null
                 ], 
                 403, 
                 ['Content-Type' => 'application/json;charset=utf8'], 
